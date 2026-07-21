@@ -57,3 +57,72 @@ export const updateVehicle = async (id, updateData) => {
 export const deleteVehicle = async (id) => {
   return Vehicle.findByIdAndDelete(id);
 };
+
+/**
+ * Purchase a vehicle by ID using atomic operators to prevent race conditions.
+ * Decrements quantity by count if stock is available.
+ * @param {string} id - Vehicle ID
+ * @param {number} [count=1] - Number of vehicles to purchase
+ * @returns {Promise<object>} Updated vehicle
+ */
+export const purchaseVehicle = async (id, count = 1) => {
+  const updatedVehicle = await Vehicle.findOneAndUpdate(
+    { _id: id, quantity: { $gte: count } },
+    { $inc: { quantity: -count } },
+    { returnDocument: 'after' }
+  );
+
+  if (!updatedVehicle) {
+    const existingVehicle = await Vehicle.findById(id);
+    if (!existingVehicle) {
+      const error = new Error('Vehicle not found');
+      error.status = 404;
+      throw error;
+    }
+    if (existingVehicle.quantity < count) {
+      const error = new Error('Vehicle is out of stock / insufficient quantity');
+      error.status = 400;
+      throw error;
+    }
+  }
+
+  return updatedVehicle;
+};
+
+/**
+ * Restock a vehicle by ID.
+ * Increments quantity by count. If vehicle does not exist and vehicle data is provided, creates it.
+ * @param {string} id - Vehicle ID
+ * @param {number} [count=1] - Number of vehicles to add
+ * @param {object} [vehicleData] - Optional details to create new vehicle if not found
+ * @returns {Promise<object>} Updated or created vehicle
+ */
+export const restockVehicle = async (id, count = 1, vehicleData = {}) => {
+  if (count <= 0) {
+    const error = new Error('Restock quantity must be greater than zero');
+    error.status = 400;
+    throw error;
+  }
+
+  const updatedVehicle = await Vehicle.findByIdAndUpdate(
+    id,
+    { $inc: { quantity: count } },
+    { returnDocument: 'after', runValidators: true }
+  );
+
+  if (!updatedVehicle) {
+    if (vehicleData && vehicleData.make && vehicleData.model && vehicleData.price !== undefined) {
+      return Vehicle.create({
+        _id: id,
+        ...vehicleData,
+        quantity: count,
+      });
+    }
+    const error = new Error('Vehicle not found');
+    error.status = 404;
+    throw error;
+  }
+
+  return updatedVehicle;
+};
+
