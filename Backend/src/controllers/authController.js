@@ -1,7 +1,7 @@
 import { registerUser, loginUser } from '../services/authService.js';
 
 /**
- * POST /api/auth/register
+ * POST /api/auth/register 
  */
 export const register = async (req, res) => {
   try {
@@ -14,12 +14,15 @@ export const register = async (req, res) => {
       });
     }
 
-    const user = await registerUser({ name, email, password });
+    const result = await registerUser({ name, email, password });
+
+    const { token, ...userData } = result;
 
     return res.status(201).json({
       success: true,
       message: 'User registered successfully',
-      data: user,
+      token: token,
+      data: userData,
     });
   } catch (error) {
     const statusCode = error.statusCode || 500;

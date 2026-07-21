@@ -19,12 +19,22 @@ export const registerUser = async ({ name, email, password }) => {
     throw error;
   }
 
-  const user = await User.create({ name, email, password });
+  // Assign role automatically based on email
+  const role = (email.toLowerCase() === 'admin@car.com') ? 'admin' : 'customer';
 
-  // Return user data without password
+  const user = await User.create({ name, email, password, role });
+
+  const token = jwt.sign(
+    { id: user._id, email: user.email, role: user.role },
+    JWT_SECRET,
+    { expiresIn: JWT_EXPIRES_IN }
+  );
+
+  // Return user data without password, including generated token
   const userObj = user.toObject();
   delete userObj.password;
-  return userObj;
+  delete userObj.__v;
+  return { ...userObj, token };
 };
 
 /**

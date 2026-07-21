@@ -39,6 +39,9 @@ describe('POST /api/auth/register', () => {
 
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
+    expect(res.body).toHaveProperty('token');
+    expect(res.body.data).toHaveProperty('token');
+    expect(res.body.data.token.split('.')).toHaveLength(3);
     expect(res.body.data).toHaveProperty('email', validUser.email);
     expect(res.body.data).toHaveProperty('name', validUser.name);
     expect(res.body.data).toHaveProperty('role', 'customer');
@@ -94,6 +97,20 @@ describe('POST /api/auth/register', () => {
     expect(res.status).toBe(409);
     expect(res.body.success).toBe(false);
     expect(res.body.message).toMatch(/already exists/i);
+  });
+
+  it('should assign the admin role automatically if the email is admin@car.com', async () => {
+    const adminUser = {
+      name: 'System Admin',
+      email: 'admin@car.com',
+      password: 'admin',
+    };
+
+    const res = await request.post('/api/auth/register').send(adminUser);
+
+    expect(res.status).toBe(201);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toHaveProperty('role', 'admin');
   });
 });
 
