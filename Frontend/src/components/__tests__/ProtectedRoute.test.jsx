@@ -51,10 +51,8 @@ describe('ProtectedRoute', () => {
     });
 
     const { container } = renderWithRouter('/dashboard');
-    // Assuming loading spinner is rendered, or just nothing for now. 
-    // We'll assert something like "Loading..." or empty depending on implementation.
-    // Let's assume it returns a div with "Loading..." text for the sake of TDD.
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    // Assuming loading spinner is rendered
+    expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
   });
 
   it('redirects to /login if no token exists', () => {
