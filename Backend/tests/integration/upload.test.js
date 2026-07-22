@@ -4,6 +4,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import supertest from 'supertest';
 import jwt from 'jsonwebtoken';
+import stream from 'stream';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 
@@ -25,55 +26,31 @@ const customerToken = jwt.sign(
   { expiresIn: '1h' }
 );
 
-// Mock cloudinary before importing app
-jest.unstable_mockModule('cloudinary', () => {
-  return {
-    v2: {
-      config: jest.fn(),
-      uploader: {
-        upload_stream: jest.fn((options, callback) => {
-           const stream = require('stream');
-           const pass = new stream.PassThrough();
-           pass.on('finish', () => {
-             // Simulate successful upload response
-             callback(null, {
-               secure_url: 'https://res.cloudinary.com/demo/image/upload/v1234567890/mock_image.jpg',
-               public_id: 'mock_image'
-             });
-           });
-           return pass;
-        })
-      }
-    },
-    default: {
-      v2: {
-        config: jest.fn(),
-        uploader: {
-          upload_stream: jest.fn((options, callback) => {
-             const stream = require('stream');
-             const pass = new stream.PassThrough();
-             pass.on('finish', () => {
-               callback(null, {
-                 secure_url: 'https://res.cloudinary.com/demo/image/upload/v1234567890/mock_image.jpg',
-                 public_id: 'mock_image'
-               });
-             });
-             return pass;
-          })
-        }
-      }
-    }
-  };
-});
+import { v2 as cloudinary } from 'cloudinary';
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   await mongoose.connect(mongoServer.getUri());
   
-  // Dynamically import app so the mock takes effect
   const appModule = await import('../../src/app.js');
   app = appModule.default;
   request = supertest(app);
+
+  jest.spyOn(cloudinary.uploader, 'upload_stream').mockImplementation((options, callback) => {
+    // Some versions of multer-storage-cloudinary use the callback, others don't.
+    // However, multer-storage-cloudinary definitely calls upload_stream
+    const pass = new stream.PassThrough();
+    pass.on('finish', () => {
+      // Simulate successful upload response
+      if (callback) {
+        callback(null, {
+          secure_url: 'https://res.cloudinary.com/demo/image/upload/v1234567890/mock_image.jpg',
+          public_id: 'mock_image'
+        });
+      }
+    });
+    return pass;
+  });
 });
 
 afterAll(async () => {
