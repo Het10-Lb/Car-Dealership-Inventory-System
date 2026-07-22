@@ -83,8 +83,7 @@ describe('Register Component', () => {
         email: 'john@example.com', 
         password: 'password123' 
       });
-      expect(localStorage.getItem('token')).toBe('fake-jwt-token');
-      expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
+      expect(mockNavigate).toHaveBeenCalledWith('/home');
     });
   });
 

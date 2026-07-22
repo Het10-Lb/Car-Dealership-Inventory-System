@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Car, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { loginAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -9,14 +10,16 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
-      const data = await loginAPI({ email, password });
-      localStorage.setItem('token', data.token);
-      navigate('/dashboard');
+      const response = await loginAPI({ email, password });
+      // The login API returns { success, message, data: { token } }
+      login(response.data.token);
+      navigate('/home');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid credentials');
     }

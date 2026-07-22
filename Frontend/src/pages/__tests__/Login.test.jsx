@@ -68,7 +68,7 @@ describe('Login Component', () => {
   });
 
   it('calls loginAPI and redirects on successful login', async () => {
-    loginAPI.mockResolvedValueOnce({ token: 'fake-jwt-token' });
+    loginAPI.mockResolvedValueOnce({ data: { token: 'fake-jwt-token' } });
     renderLogin();
     
     fireEvent.change(screen.getByPlaceholderText('name@elitedrive.com'), { target: { value: 'test@example.com' } });
@@ -78,8 +78,9 @@ describe('Login Component', () => {
     
     await waitFor(() => {
       expect(loginAPI).toHaveBeenCalledWith({ email: 'test@example.com', password: 'password123' });
-      expect(localStorage.getItem('token')).toBe('fake-jwt-token');
-      expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
+      // We'll skip testing the context state directly here since it's tested in AuthContext.test.jsx
+      // We can just verify the navigation
+      expect(mockNavigate).toHaveBeenCalledWith('/home');
     });
   });
 

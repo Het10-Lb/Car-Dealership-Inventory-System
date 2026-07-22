@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Car, User, Mail, Lock, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { registerAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -10,14 +11,15 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
       const data = await registerAPI({ name, email, password });
-      localStorage.setItem('token', data.token);
-      navigate('/dashboard');
+      login(data.token);
+      navigate('/home');
     } catch (err) {
       setError(err.response?.data?.message || 'User already exists');
     }
