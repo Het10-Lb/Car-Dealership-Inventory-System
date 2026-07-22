@@ -74,7 +74,7 @@ describe('POST /api/vehicles/:id/purchase', () => {
 
     const purchase = await Purchase.findOne({ user: customerId, vehicle: vehicle._id });
     expect(purchase).toBeTruthy();
-    expect(purchase.pricePaid).toBe(25000); // Price from seedVehicle
+    expect(purchase.purchasePrice).toBe(25000); // Price from seedVehicle
   });
 
   it('should return 400 Bad Request when attempting to purchase a vehicle with quantity === 0', async () => {

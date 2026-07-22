@@ -57,7 +57,7 @@ const seedPurchase = async (userId, overrides = {}) => {
   return Purchase.create({
     user: userId,
     vehicle: vehicle._id,
-    pricePaid: vehicle.price,
+    purchasePrice: vehicle.price,
     ...overrides,
   });
 };

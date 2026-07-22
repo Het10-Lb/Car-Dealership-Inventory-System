@@ -1,4 +1,5 @@
 import Vehicle from '../models/vehicleModel.js';
+import Purchase from '../models/purchaseModel.js';
 
 /**
  * Get all vehicles.
@@ -62,10 +63,11 @@ export const deleteVehicle = async (id) => {
  * Purchase a vehicle by ID using atomic operators to prevent race conditions.
  * Decrements quantity by count if stock is available.
  * @param {string} id - Vehicle ID
+ * @param {string} userId - User ID making the purchase
  * @param {number} [count=1] - Number of vehicles to purchase
  * @returns {Promise<object>} Updated vehicle
  */
-export const purchaseVehicle = async (id, count = 1) => {
+export const purchaseVehicle = async (id, userId, count = 1) => {
   const updatedVehicle = await Vehicle.findOneAndUpdate(
     { _id: id, quantity: { $gte: count } },
     { $inc: { quantity: -count } },
@@ -85,6 +87,14 @@ export const purchaseVehicle = async (id, count = 1) => {
       throw error;
     }
   }
+
+  // Create Purchase record(s)
+  const purchases = Array.from({ length: count }).map(() => ({
+    user: userId,
+    vehicle: id,
+    purchasePrice: updatedVehicle.price,
+  }));
+  await Purchase.insertMany(purchases);
 
   return updatedVehicle;
 };

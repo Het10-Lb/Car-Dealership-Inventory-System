@@ -12,7 +12,7 @@ const purchaseSchema = new mongoose.Schema(
       ref: 'Vehicle',
       required: true,
     },
-    pricePaid: {
+    purchasePrice: {
       type: Number,
       required: true,
     },

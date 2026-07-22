@@ -126,8 +126,9 @@ export const purchase = async (req, res) => {
   try {
     const { id } = req.params;
     const quantity = req.body?.quantity ? Number(req.body.quantity) : 1;
+    const userId = req.user.id;
 
-    const vehicle = await purchaseVehicle(id, quantity);
+    const vehicle = await purchaseVehicle(id, userId, quantity);
     return res.status(200).json({ success: true, data: vehicle });
   } catch (error) {
     if (
