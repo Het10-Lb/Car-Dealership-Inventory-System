@@ -5,6 +5,7 @@ import supertest from 'supertest';
 import jwt from 'jsonwebtoken';
 import app from '../../src/app.js';
 import Vehicle from '../../src/models/vehicleModel.js';
+import Purchase from '../../src/models/purchaseModel.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 
@@ -12,14 +13,16 @@ let mongoServer;
 let request;
 
 // Generate test tokens
+const adminId = new mongoose.Types.ObjectId();
 const adminToken = jwt.sign(
-  { id: new mongoose.Types.ObjectId(), email: 'admin@test.com', role: 'admin' },
+  { id: adminId, email: 'admin@test.com', role: 'admin' },
   JWT_SECRET,
   { expiresIn: '1h' }
 );
 
+const customerId = new mongoose.Types.ObjectId();
 const customerToken = jwt.sign(
-  { id: new mongoose.Types.ObjectId(), email: 'customer@test.com', role: 'customer' },
+  { id: customerId, email: 'customer@test.com', role: 'customer' },
   JWT_SECRET,
   { expiresIn: '1h' }
 );
@@ -32,6 +35,7 @@ beforeAll(async () => {
 
 afterEach(async () => {
   await Vehicle.deleteMany({});
+  await Purchase.deleteMany({});
 });
 
 afterAll(async () => {
@@ -67,6 +71,10 @@ describe('POST /api/vehicles/:id/purchase', () => {
 
     const updatedVehicle = await Vehicle.findById(vehicle._id);
     expect(updatedVehicle.quantity).toBe(4);
+
+    const purchase = await Purchase.findOne({ user: customerId, vehicle: vehicle._id });
+    expect(purchase).toBeTruthy();
+    expect(purchase.pricePaid).toBe(25000); // Price from seedVehicle
   });
 
   it('should return 400 Bad Request when attempting to purchase a vehicle with quantity === 0', async () => {
