@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import vehicleRoutes from './routes/vehicleRoutes.js';
 
@@ -6,6 +7,9 @@ import purchaseRoutes from './routes/purchaseRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 
 const app = express();
+
+// Enable CORS
+app.use(cors());
 
 // Parse JSON request bodies
 app.use(express.json());
