@@ -27,4 +27,9 @@ export const registerAPI = async (userData) => {
   return response.data;
 };
 
+export const getVehiclesAPI = async () => {
+  const response = await api.get('/vehicles');
+  return response.data;
+};
+
 export default api;
