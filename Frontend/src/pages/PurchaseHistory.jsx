@@ -79,7 +79,7 @@ export default function PurchaseHistory() {
                         {purchase.vehicle?.model || 'Unknown'} 
                       </td>
                       <td className="px-6 py-5 text-right font-label-md font-bold text-primary">
-                        ${purchase.purchasePrice?.toLocaleString() || 0}
+                        ₹{purchase.purchasePrice?.toLocaleString() || 0}
                       </td>
                       <td className="px-6 py-5 text-right font-label-sm text-on-surface-variant">
                         {new Date(purchase.purchaseDate).toLocaleDateString()}

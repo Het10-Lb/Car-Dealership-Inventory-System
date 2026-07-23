@@ -5,7 +5,7 @@ import { updateProfileAPI, updatePasswordAPI } from '../services/api';
 import { Save, Lock, User as UserIcon, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function Settings() {
-  const { user, setUser } = useAuth();
+  const { user, setUser, login } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
 
   // Profile State

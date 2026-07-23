@@ -50,13 +50,13 @@ describe('PurchaseHistory Component', () => {
       // For Toyota Corolla
       expect(screen.getByText(/Toyota/i)).toBeInTheDocument();
       expect(screen.getByText(/Corolla/i)).toBeInTheDocument();
-      expect(screen.getByText(/\$?20,?000/)).toBeInTheDocument();
+      expect(screen.getByText(/₹?20,?000/)).toBeInTheDocument();
       expect(screen.getByText(new RegExp(new Date('2023-10-01T10:00:00Z').toLocaleDateString(), 'i'))).toBeInTheDocument(); 
       
       // For Honda Civic
       expect(screen.getByText(/Honda/i)).toBeInTheDocument();
       expect(screen.getByText(/Civic/i)).toBeInTheDocument();
-      expect(screen.getByText(/\$?22,?000/)).toBeInTheDocument();
+      expect(screen.getByText(/₹?22,?000/)).toBeInTheDocument();
       expect(screen.getByText(new RegExp(new Date('2023-10-05T12:00:00Z').toLocaleDateString(), 'i'))).toBeInTheDocument();
     });
   });

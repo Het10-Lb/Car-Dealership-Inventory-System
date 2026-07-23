@@ -1,9 +1,40 @@
-import { useState, useEffect } from 'react';
+  import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import DashboardLayout from '../components/DashboardLayout';
 import CarCard from '../components/CarCard';
 import { getVehiclesAPI, searchVehiclesAPI, purchaseVehicle } from '../services/api';
 import { ChevronDown, CheckCircle2 } from 'lucide-react';
+
+const CustomSelect = ({ value, onChange, options }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between gap-2 px-3 py-1.5 bg-surface-container-low border border-outline-variant rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+      >
+        <span className="truncate">{value}</span>
+        <ChevronDown size={16} className={`flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
+          <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto no-scrollbar bg-surface-container-high border border-outline-variant rounded-xl shadow-lg z-50 animate-in fade-in slide-in-from-top-1 duration-200">
+            {options.map((opt) => (
+              <button
+                key={opt}
+                onClick={() => { onChange(opt); setIsOpen(false); }}
+                className={`w-full text-left px-3 py-2 text-body-md hover:bg-primary/10 transition-colors ${value === opt ? 'text-primary font-bold bg-primary/5' : 'text-on-surface'}`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 export default function Home() {
   const [searchParams] = useSearchParams();
@@ -20,6 +51,10 @@ export default function Home() {
   const [filterCategory, setFilterCategory] = useState('All Categories');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+
+  const [sortOption, setSortOption] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [showSortMenu, setShowSortMenu] = useState(false);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -65,6 +100,13 @@ export default function Home() {
     return true;
   });
 
+  // Apply sorting
+  if (sortOption === 'price-asc') {
+    filteredVehicles.sort((a, b) => a.price - b.price);
+  } else if (sortOption === 'price-desc') {
+    filteredVehicles.sort((a, b) => b.price - a.price);
+  }
+
   return (
     <DashboardLayout>
       {toast && (
@@ -75,66 +117,108 @@ export default function Home() {
       )}
       {/* Filter & Search Section */}
       <div className="bg-surface-container p-6 rounded-xl border border-outline-variant space-y-6">
-        <div className="flex justify-between items-end">
+        <div className="flex justify-between items-center">
           <h2 className="font-headline-lg text-headline-lg text-on-surface">Cars Inventory</h2>
-          <button className="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container-high transition-colors">
-            <span>Sort by</span>
-            <ChevronDown size={16} />
-          </button>
-        </div>
+          <div className="flex gap-3">
+            <button 
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg font-label-md text-label-md transition-colors ${showFilters ? 'bg-primary text-on-primary border-primary' : 'border-outline-variant text-on-surface hover:bg-surface-container-high'}`}
+            >
+              <span>Filters</span>
+              <ChevronDown size={16} className={`transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowSortMenu(!showSortMenu)}
+                className={`flex items-center justify-between gap-3 pl-4 pr-3 py-2 min-w-[160px] border rounded-lg font-label-md text-label-md transition-colors focus:outline-none focus:ring-1 focus:ring-primary ${showSortMenu ? 'bg-surface-container-high border-primary text-on-surface' : 'border-outline-variant text-on-surface bg-transparent hover:bg-surface-container-high'}`}
+              >
+                <span>
+                  {sortOption === 'price-asc' ? 'Price: Low to High' :
+                   sortOption === 'price-desc' ? 'Price: High to Low' : 'Sort by'}
+                </span>
+                <ChevronDown size={16} className={`transition-transform text-on-surface ${showSortMenu ? 'rotate-180' : ''}`} />
+              </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="space-y-1.5">
-            <label className="font-label-sm text-label-sm text-on-surface-variant opacity-60">Make</label>
-            <select 
-              value={filterMake}
-              onChange={(e) => { setFilterMake(e.target.value); setFilterModel('All Models'); }}
-              className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-body-md font-body-md text-on-surface focus:ring-1 focus:ring-primary outline-none appearance-none"
-            >
-              {makes.map(m => <option key={m} value={m}>{m}</option>)}
-            </select>
-          </div>
-          <div className="space-y-1.5">
-            <label className="font-label-sm text-label-sm text-on-surface-variant opacity-60">Model</label>
-            <select 
-              value={filterModel}
-              onChange={(e) => setFilterModel(e.target.value)}
-              className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-body-md font-body-md text-on-surface focus:ring-1 focus:ring-primary outline-none appearance-none"
-            >
-              {models.map(m => <option key={m} value={m}>{m}</option>)}
-            </select>
-          </div>
-          <div className="space-y-1.5">
-            <label className="font-label-sm text-label-sm text-on-surface-variant opacity-60">Category</label>
-            <select 
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-body-md font-body-md text-on-surface focus:ring-1 focus:ring-primary outline-none appearance-none"
-            >
-              {categories.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-          <div className="space-y-1.5">
-            <label className="font-label-sm text-label-sm text-on-surface-variant opacity-60">Price Range</label>
-            <div className="flex items-center gap-2">
-              <input 
-                value={minPrice}
-                onChange={(e) => setMinPrice(e.target.value)}
-                className="w-1/2 bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-label-md text-on-surface focus:outline-none focus:border-primary" 
-                placeholder="Min" 
-                type="number" 
-              />
-              <span className="text-outline">-</span>
-              <input 
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
-                className="w-1/2 bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-label-md text-on-surface focus:outline-none focus:border-primary" 
-                placeholder="Max" 
-                type="number" 
-              />
+              {showSortMenu && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40" 
+                    onClick={() => setShowSortMenu(false)}
+                  ></div>
+                  <div className="absolute right-0 mt-2 w-48 bg-surface-container-high border border-outline-variant rounded-xl shadow-lg z-50 overflow-y-auto no-scrollbar animate-in fade-in slide-in-from-top-2 duration-200">
+                    <button 
+                      onClick={() => { setSortOption(''); setShowSortMenu(false); }}
+                      className={`w-full text-left px-4 py-3 font-label-md text-label-md hover:bg-primary/10 transition-colors ${sortOption === '' ? 'text-primary font-bold bg-primary/5' : 'text-on-surface'}`}
+                    >
+                      Default (None)
+                    </button>
+                    <button 
+                      onClick={() => { setSortOption('price-asc'); setShowSortMenu(false); }}
+                      className={`w-full text-left px-4 py-3 font-label-md text-label-md hover:bg-primary/10 transition-colors border-t border-outline-variant/30 ${sortOption === 'price-asc' ? 'text-primary font-bold bg-primary/5' : 'text-on-surface'}`}
+                    >
+                      Price: Low to High
+                    </button>
+                    <button 
+                      onClick={() => { setSortOption('price-desc'); setShowSortMenu(false); }}
+                      className={`w-full text-left px-4 py-3 font-label-md text-label-md hover:bg-primary/10 transition-colors border-t border-outline-variant/30 ${sortOption === 'price-desc' ? 'text-primary font-bold bg-primary/5' : 'text-on-surface'}`}
+                    >
+                      Price: High to Low
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
+
+        {showFilters && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="space-y-1.5">
+              <label className="font-label-sm text-label-sm text-on-surface-variant opacity-60">Make</label>
+              <CustomSelect 
+                value={filterMake}
+                onChange={(val) => { setFilterMake(val); setFilterModel('All Models'); }}
+                options={makes}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="font-label-sm text-label-sm text-on-surface-variant opacity-60">Model</label>
+              <CustomSelect 
+                value={filterModel}
+                onChange={(val) => setFilterModel(val)}
+                options={models}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="font-label-sm text-label-sm text-on-surface-variant opacity-60">Category</label>
+              <CustomSelect 
+                value={filterCategory}
+                onChange={(val) => setFilterCategory(val)}
+                options={categories}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="font-label-sm text-label-sm text-on-surface-variant opacity-60">Price Range</label>
+              <div className="flex items-center gap-2">
+                <input 
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  className="w-1/2 bg-surface-container-low border border-outline-variant rounded-lg px-3 py-1.5 text-body-md text-on-surface focus:outline-none focus:border-primary" 
+                  placeholder="Min" 
+                  type="number" 
+                />
+                <span className="text-outline">-</span>
+                <input 
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  className="w-1/2 bg-surface-container-low border border-outline-variant rounded-lg px-3 py-1.5 text-body-md text-on-surface focus:outline-none focus:border-primary" 
+                  placeholder="Max" 
+                  type="number" 
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Vehicle Grid */}

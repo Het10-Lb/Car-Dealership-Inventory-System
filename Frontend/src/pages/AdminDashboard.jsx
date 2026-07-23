@@ -205,7 +205,7 @@ export default function AdminDashboard() {
           </div>
           <p className="text-on-surface-variant font-label-sm uppercase tracking-wider mb-1">Stock Value</p>
           <p className="text-headline-md font-bold">
-            ${stockValue >= 10000000 ? `${(stockValue / 1000000).toFixed(1)}M` : stockValue.toLocaleString()}
+            ₹{stockValue >= 10000000 ? `${(stockValue / 1000000).toFixed(1)}M` : stockValue.toLocaleString()}
           </p>
         </div>
         
@@ -289,7 +289,7 @@ export default function AdminDashboard() {
                       </span>
                     </td>
                     <td className="px-6 py-5 text-right font-label-md font-bold text-primary">
-                      ${vehicle.price?.toLocaleString()}
+                      ₹{vehicle.price?.toLocaleString()}
                     </td>
                     <td className="px-6 py-5 text-center">
                       <span className={`font-label-md ${vehicle.quantity < 3 ? 'text-error' : ''}`}>
@@ -387,7 +387,7 @@ export default function AdminDashboard() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="price" className="font-label-md text-label-md text-on-surface-variant">Price ($)</label>
+                  <label htmlFor="price" className="font-label-md text-label-md text-on-surface-variant">Price (₹)</label>
                   <input 
                     id="price"
                     name="price"

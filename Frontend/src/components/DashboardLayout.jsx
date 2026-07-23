@@ -37,7 +37,7 @@ export default function DashboardLayout({ children }) {
       <aside className="w-[280px] h-screen fixed left-0 top-0 bg-surface-container-lowest border-r border-outline-variant flex flex-col py-6 z-50">
         <div className="px-6 mb-10 flex items-center gap-3">
           <div className="bg-primary-container text-white p-1 rounded-lg">
-            <Car size={32} />
+            <img src="/image.png" alt="logo" height={32} width={32} />
           </div>
           <div>
             <h1 className="font-headline-md text-headline-md font-bold text-on-surface leading-tight">EliteDrive</h1>
@@ -75,23 +75,23 @@ export default function DashboardLayout({ children }) {
           )}
         </nav>
 
-        <div className="px-6 mt-auto space-y-1">
-          <p className="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest mb-4 opacity-40">Support</p>
+        <div className="mt-auto space-y-1 pb-4">
+          <p className="px-6 text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest mb-4 opacity-40">Support</p>
           <Link 
             to="/settings"
-            className={`w-full flex items-center gap-3 py-3 transition-colors ${isLinkActive('/settings') ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'}`}
+            className={`w-full flex items-center gap-3 px-6 py-3 transition-colors duration-200 ${isLinkActive('/settings') ? 'text-primary font-bold border-l-4 border-primary bg-surface-container-high' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}`}
           >
             <Settings size={24} />
             <span className="font-label-md text-label-md">Settings</span>
           </Link>
           <Link 
             to="/support"
-            className={`w-full flex items-center gap-3 py-3 transition-colors ${isLinkActive('/support') ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'}`}
+            className={`w-full flex items-center gap-3 px-6 py-3 transition-colors duration-200 ${isLinkActive('/support') ? 'text-primary font-bold border-l-4 border-primary bg-surface-container-high' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}`}
           >
             <Headset size={24} />
             <span className="font-label-md text-label-md">Support & Ticket</span>
           </Link>
-          <button onClick={logout} className="w-full flex items-center gap-3 py-3 text-error transition-colors mt-4">
+          <button onClick={logout} className="w-full flex items-center gap-3 px-6 py-3 text-error transition-colors duration-200 mt-4 cursor-pointer hover:bg-error/10">
             <LogOut size={24} />
             <span className="font-label-md text-label-md">Logout</span>
           </button>

@@ -8,18 +8,14 @@ export default function CarCard({ car, onPurchase }) {
       data-testid="car-card"
       className={`bg-surface-container border border-outline-variant rounded-xl overflow-hidden flex flex-col transition-all duration-300 group ${isSoldOut ? 'opacity-80 filter grayscale-[0.3]' : 'card-glow'}`}
     >
-      <div className="relative h-48 bg-surface-container-low flex items-center justify-center p-4">
-        {/* <div className="absolute top-4 left-4 z-10">
-          {isSoldOut ? (
-            <span className="px-3 py-1 bg-on-surface-variant/20 text-on-surface-variant text-[10px] font-bold uppercase rounded-full border border-outline-variant">
+      <div className="relative h-48 bg-surface-container-low overflow-hidden">
+        {isSoldOut && (
+          <div className="absolute top-4 left-4 z-10">
+            <span className="px-3 py-1 bg-background/90 backdrop-blur-sm text-on-surface text-[10px] font-bold uppercase rounded-full border border-outline-variant">
               Sold Out
             </span>
-          ) : (
-            <span className="px-3 py-1 bg-primary-container/20 text-primary text-[10px] font-bold uppercase rounded-full border border-primary/30">
-              New
-            </span>
-          )}
-        </div> */}
+          </div>
+        )}
         
         {/* {!isSoldOut && (
           <button className="absolute top-4 right-4 z-10 text-on-surface-variant hover:text-primary transition-colors">
@@ -28,7 +24,7 @@ export default function CarCard({ car, onPurchase }) {
         )} */}
 
         <img 
-          className={`w-full h-full object-contain ${!isSoldOut ? 'transform group-hover:scale-105 transition-transform duration-500' : ''}`}
+          className={`w-full h-full object-cover ${!isSoldOut ? 'transform group-hover:scale-105 transition-transform duration-500' : ''}`}
           src={car.imageUrl || "https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"} 
           alt={`${car.year} ${car.make} ${car.model}`}
         />
@@ -56,7 +52,7 @@ export default function CarCard({ car, onPurchase }) {
             <span className="font-label-md text-label-md font-bold text-on-surface">4.8</span>
           </div>
           <span className={`font-headline-md text-[18px] ${isSoldOut ? 'text-on-surface-variant' : 'text-primary'}`}>
-            ${car.price?.toLocaleString()}
+            ₹{car.price?.toLocaleString()}
           </span>
         </div>
 
