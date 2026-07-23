@@ -29,6 +29,14 @@ export const searchVehicles = async (query) => {
     if (query.minPrice) filter.price.$gte = Number(query.minPrice);
     if (query.maxPrice) filter.price.$lte = Number(query.maxPrice);
   }
+  if (query.q) {
+    const searchRegex = { $regex: query.q, $options: 'i' };
+    filter.$or = [
+      { make: searchRegex },
+      { model: searchRegex },
+      { category: searchRegex },
+    ];
+  }
 
   return Vehicle.find(filter);
 };

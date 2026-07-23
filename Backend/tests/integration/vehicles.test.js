@@ -140,6 +140,23 @@ describe('GET /api/vehicles/search', () => {
     expect(res.body.data[0].model).toBe('RAV4');
   });
 
+  it('should filter by generic search query (q)', async () => {
+    const res = await request
+      .get('/api/vehicles/search?q=rav')
+      .set('Authorization', `Bearer ${customerToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(1);
+    expect(res.body.data[0].model).toBe('RAV4');
+
+    const res2 = await request
+      .get('/api/vehicles/search?q=toyota')
+      .set('Authorization', `Bearer ${customerToken}`);
+
+    expect(res2.status).toBe(200);
+    expect(res2.body.data).toHaveLength(2);
+  });
+
   it('should return all vehicles when no filters are provided', async () => {
     const res = await request
       .get('/api/vehicles/search')

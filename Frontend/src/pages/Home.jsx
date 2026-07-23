@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import DashboardLayout from '../components/DashboardLayout';
 import CarCard from '../components/CarCard';
-import { getVehiclesAPI, purchaseVehicle } from '../services/api';
+import { getVehiclesAPI, searchVehiclesAPI, purchaseVehicle } from '../services/api';
 import { ChevronDown, CheckCircle2 } from 'lucide-react';
 
 export default function Home() {
+  const [searchParams] = useSearchParams();
+  const q = searchParams.get('q');
+
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,8 +23,9 @@ export default function Home() {
 
   useEffect(() => {
     const fetchVehicles = async () => {
+      setLoading(true);
       try {
-        const response = await getVehiclesAPI();
+        const response = q ? await searchVehiclesAPI({ q }) : await getVehiclesAPI();
         setVehicles(response.data);
       } catch (err) {
         setError('Failed to load vehicles');
@@ -30,7 +35,7 @@ export default function Home() {
       }
     };
     fetchVehicles();
-  }, []);
+  }, [q]);
 
   const handlePurchase = async (carId) => {
     try {

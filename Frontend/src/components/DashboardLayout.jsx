@@ -1,4 +1,5 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   Car, 
@@ -16,8 +17,19 @@ import {
 export default function DashboardLayout({ children }) {
   const { user, role, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const isLinkActive = (path) => location.pathname === path;
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/home?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/home');
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -85,14 +97,17 @@ export default function DashboardLayout({ children }) {
         {/* TopAppBar */}
         <header className="flex justify-between items-center px-8 py-4 bg-surface border-b border-outline-variant sticky top-0 z-40">
           <div className="flex items-center gap-4 flex-1 max-w-xl">
-            <div className="relative w-full">
+            <form onSubmit={handleSearch} className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-50" size={20} />
               <input 
                 type="text" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search or type a Command" 
-                className="w-full bg-surface-container-low border border-outline-variant rounded-full pl-10 pr-4 py-2 text-body-md font-body-md focus:outline-none focus:border-primary transition-all text-on-surface"
+                className="w-full bg-surface-container-low border border-outline-variant rounded-full pl-10 pr-24 py-2 text-body-md font-body-md focus:outline-none focus:border-primary transition-all text-on-surface"
               />
-            </div>
+
+            </form>
           </div>
           
           <div className="flex items-center gap-6">

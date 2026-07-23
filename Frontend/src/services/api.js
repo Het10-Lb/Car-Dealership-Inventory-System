@@ -32,6 +32,12 @@ export const getVehiclesAPI = async () => {
   return response.data;
 };
 
+export const searchVehiclesAPI = async (queryParams) => {
+  const queryString = new URLSearchParams(queryParams).toString();
+  const response = await api.get(`/vehicles/search?${queryString}`);
+  return response.data;
+};
+
 export const purchaseVehicle = async (id) => {
   const response = await api.post(`/vehicles/${id}/purchase`);
   return response.data;
