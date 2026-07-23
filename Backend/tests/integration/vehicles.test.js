@@ -3,6 +3,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import supertest from 'supertest';
 import jwt from 'jsonwebtoken';
+
 import app from '../../src/app.js';
 import Vehicle from '../../src/models/vehicleModel.js';
 
@@ -158,6 +159,7 @@ describe('POST /api/vehicles', () => {
     category: 'Sedan',
     price: 40000,
     quantity: 10,
+    imageUrl: 'https://example.com/tesla.jpg'
   };
 
   it('should allow admin to create a vehicle and return 201', async () => {
@@ -170,6 +172,7 @@ describe('POST /api/vehicles', () => {
     expect(res.body.success).toBe(true);
     expect(res.body.data).toHaveProperty('make', 'Tesla');
     expect(res.body.data).toHaveProperty('_id');
+    expect(res.body.data).toHaveProperty('imageUrl', 'https://example.com/tesla.jpg');
   });
 
   it('should return 403 when a customer tries to create a vehicle', async () => {

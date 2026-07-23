@@ -27,6 +27,10 @@ const vehicleSchema = new mongoose.Schema(
       default: 0,
       min: [0, 'Quantity cannot be negative'],
     },
+    imageUrl: {
+      type: String,
+      default: 'https://via.placeholder.com/300?text=No+Image'
+    },
   },
   { timestamps: true }
 );

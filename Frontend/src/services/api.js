@@ -38,7 +38,7 @@ export const purchaseVehicle = async (id) => {
 };
 
 export const getMyPurchases = async () => {
-  const response = await api.get('/purchases/me');
+  const response = await api.get('/purchases/my-history');
   return response.data;
 };
 

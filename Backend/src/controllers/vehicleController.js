@@ -43,7 +43,7 @@ export const search = async (req, res) => {
  */
 export const create = async (req, res) => {
   try {
-    const { make, model, category, price, quantity } = req.body;
+    const { make, model, category, price, quantity, imageUrl } = req.body;
 
     if (!make || !model || price === undefined) {
       return res.status(400).json({
@@ -52,7 +52,7 @@ export const create = async (req, res) => {
       });
     }
 
-    const vehicle = await createVehicle({ make, model, category, price, quantity });
+    const vehicle = await createVehicle({ make, model, category, price, quantity, imageUrl });
     return res.status(201).json({ success: true, data: vehicle });
   } catch (error) {
     if (error.name === 'ValidationError') {

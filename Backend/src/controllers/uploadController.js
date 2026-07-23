@@ -9,7 +9,7 @@ export const uploadImage = async (req, res) => {
     
     return res.status(200).json({
       success: true,
-      data: { imageUrl }
+      data: { imageUrl: req.file.path }
     });
   } catch (error) {
     console.error('Upload Error:', error);

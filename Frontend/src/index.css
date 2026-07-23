@@ -4,7 +4,7 @@
 /* Base styling */
 @layer base {
   body {
-    @apply bg-background text-on-surface font-body-md overflow-hidden min-h-screen relative flex items-center justify-center p-6;
+    @apply bg-background text-on-surface font-body-md min-h-screen relative;
   }
 }
 

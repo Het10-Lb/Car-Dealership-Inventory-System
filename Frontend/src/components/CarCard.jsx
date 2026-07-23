@@ -1,6 +1,6 @@
 import { Heart, Disc, Settings2, Star } from 'lucide-react';
 
-export default function CarCard({ car }) {
+export default function CarCard({ car, onPurchase }) {
   const isSoldOut = car.quantity === 0;
 
   return (
@@ -9,7 +9,7 @@ export default function CarCard({ car }) {
       className={`bg-surface-container border border-outline-variant rounded-xl overflow-hidden flex flex-col transition-all duration-300 group ${isSoldOut ? 'opacity-80 filter grayscale-[0.3]' : 'card-glow'}`}
     >
       <div className="relative h-48 bg-surface-container-low flex items-center justify-center p-4">
-        <div className="absolute top-4 left-4 z-10">
+        {/* <div className="absolute top-4 left-4 z-10">
           {isSoldOut ? (
             <span className="px-3 py-1 bg-on-surface-variant/20 text-on-surface-variant text-[10px] font-bold uppercase rounded-full border border-outline-variant">
               Sold Out
@@ -19,13 +19,13 @@ export default function CarCard({ car }) {
               New
             </span>
           )}
-        </div>
+        </div> */}
         
-        {!isSoldOut && (
+        {/* {!isSoldOut && (
           <button className="absolute top-4 right-4 z-10 text-on-surface-variant hover:text-primary transition-colors">
             <Heart size={20} />
           </button>
-        )}
+        )} */}
 
         <img 
           className={`w-full h-full object-contain ${!isSoldOut ? 'transform group-hover:scale-105 transition-transform duration-500' : ''}`}
@@ -69,6 +69,7 @@ export default function CarCard({ car }) {
           
           <button 
             disabled={isSoldOut}
+            onClick={() => onPurchase(car._id)}
             className={`px-6 py-2 font-label-md text-label-md font-bold rounded-lg transition-all ${
               isSoldOut 
                 ? 'bg-outline-variant text-on-surface-variant/50 cursor-not-allowed' 
@@ -82,3 +83,4 @@ export default function CarCard({ car }) {
     </div>
   );
 }
+
