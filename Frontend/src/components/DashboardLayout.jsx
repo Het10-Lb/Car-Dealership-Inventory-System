@@ -90,7 +90,7 @@ export default function DashboardLayout({ children }) {
               <input 
                 type="text" 
                 placeholder="Search or type a Command" 
-                className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-10 pr-4 py-2 text-body-md font-body-md focus:outline-none focus:border-primary transition-all text-on-surface"
+                className="w-full bg-surface-container-low border border-outline-variant rounded-full pl-10 pr-4 py-2 text-body-md font-body-md focus:outline-none focus:border-primary transition-all text-on-surface"
               />
             </div>
           </div>

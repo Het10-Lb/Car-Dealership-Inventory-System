@@ -5,7 +5,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
 import PurchaseHistory from './pages/PurchaseHistory'
-import AdminInventory from './pages/AdminInventory'
+import AdminDashboard from './pages/AdminDashboard'
 import './App.css'
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
 
         {/* Protected Admin Routes */}
         <Route element={<ProtectedRoute requiredRole="admin" />}>
-          <Route path="/admin/inventory" element={<AdminInventory />} />
+          <Route path="/admin/inventory" element={<AdminDashboard />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

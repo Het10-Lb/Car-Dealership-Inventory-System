@@ -42,4 +42,37 @@ export const getMyPurchases = async () => {
   return response.data;
 };
 
+// Admin endpoints
+export const createVehicle = async (vehicleData) => {
+  const response = await api.post('/vehicles', vehicleData);
+  return response.data;
+};
+
+export const updateVehicle = async (id, vehicleData) => {
+  const response = await api.put(`/vehicles/${id}`, vehicleData);
+  return response.data;
+};
+
+export const deleteVehicle = async (id) => {
+  const response = await api.delete(`/vehicles/${id}`);
+  return response.data;
+};
+
+export const restockVehicle = async (id, quantity) => {
+  const response = await api.post(`/vehicles/${id}/restock`, { quantity });
+  return response.data;
+};
+
+export const uploadImage = async (file) => {
+  const formData = new FormData();
+  formData.append('image', file);
+  
+  const response = await api.post('/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
 export default api;
