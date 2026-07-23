@@ -1,13 +1,14 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Home from '../Home';
-import { getVehiclesAPI } from '../../services/api';
+import { getVehiclesAPI, searchVehiclesAPI } from '../../services/api';
 import { AuthProvider } from '../../context/AuthContext';
 
 // Mock the API
 vi.mock('../../services/api', () => ({
   getVehiclesAPI: vi.fn(),
+  searchVehiclesAPI: vi.fn(),
 }));
 
 // Mock CarCard to isolate rendering
@@ -43,12 +44,12 @@ describe('Home Page (Car Inventory)', () => {
     vi.clearAllMocks();
   });
 
-  const renderHome = () => {
+  const renderHome = (initialRoute = '/home') => {
     render(
       <AuthProvider>
-        <BrowserRouter>
+        <MemoryRouter initialEntries={[initialRoute]}>
           <Home />
-        </BrowserRouter>
+        </MemoryRouter>
       </AuthProvider>
     );
   };
@@ -80,6 +81,17 @@ describe('Home Page (Car Inventory)', () => {
     
     await waitFor(() => {
       expect(screen.getByText(/No vehicles available/i)).toBeInTheDocument();
+    });
+  });
+
+  it('calls searchVehiclesAPI when search query parameter is present', async () => {
+    searchVehiclesAPI.mockResolvedValueOnce({ success: true, data: mockCars });
+    
+    renderHome('/home?q=Bentley');
+    
+    await waitFor(() => {
+      expect(searchVehiclesAPI).toHaveBeenCalledWith({ q: 'Bentley' });
+      expect(screen.getAllByTestId('car-card')).toHaveLength(2);
     });
   });
 });
