@@ -11,6 +11,7 @@ vi.mock('../../services/api', () => ({
   createVehicle: vi.fn(),
   updateVehicle: vi.fn(),
   deleteVehicle: vi.fn(),
+  uploadImage: vi.fn(),
 }));
 
 const mockCars = [
@@ -117,11 +118,18 @@ describe('AdminDashboard Page', () => {
 
     await waitFor(() => {
       expect(createVehicle).toHaveBeenCalledTimes(1);
-      expect(createVehicle).toHaveBeenCalledWith(expect.any(FormData));
+      expect(createVehicle).toHaveBeenCalledWith(expect.objectContaining({
+        make: 'Audi',
+        model: 'A7 Sportback',
+        price: 176037,
+        quantity: 12,
+        category: 'Luxury Sedan'
+      }));
     });
   });
 
   it('calls delete API when delete button is clicked on a row', async () => {
+    window.confirm = vi.fn().mockReturnValue(true);
     getVehiclesAPI.mockResolvedValueOnce({ success: true, data: mockCars });
     deleteVehicle.mockResolvedValueOnce({ success: true });
 
