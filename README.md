@@ -1,7 +1,14 @@
 # Car Dealership Inventory System
 
 ## Overview
-A full-stack web application designed for a car dealership to manage its vehicle inventory. Built using the MERN stack with a React/Vite frontend and Tailwind CSS for styling. Customers can browse and purchase vehicles, while administrators have access to an inventory management dashboard and a support ticket system. 
+A full-stack web application designed for a car dealership to manage its vehicle inventory. Built using the MERN stack with a React/Vite frontend and Tailwind CSS for styling. Customers can browse and purchase vehicles, while administrators have access to an inventory management dashboard and a support ticket system.
+
+##Deployment
+Live:  https://car-dealership-inventory-system-five.vercel.app/
+
+Credential for testing:
+- **admin: admin@elitedrive.com  pass: admin
+- **User: test@gmail.com pass: test1234
 
 ## Features
 - **Authentication & Authorization**: Secure JWT-based auth with separate roles (Customer, Admin).
@@ -143,3 +150,28 @@ However, it required clear, specific prompting and a solid architectural underst
 ---
 *For a complete trace of AI interactions, please refer to the `PROMPTS.md` file.*
 *For the detailed technical specification, please refer to `PRD.md`.*
+
+---
+### Screens
+- **User**: 
+<img width="1916" height="863" alt="Screenshot 2026-07-23 205933" src="https://github.com/user-attachments/assets/d1c2128b-ce45-4c6b-9718-b67407d58805" />
+<img width="1917" height="863" alt="Screenshot 2026-07-23 205924" src="https://github.com/user-attachments/assets/8e65b049-b8cb-4091-8484-a047a48ae94a" />
+<img width="1902" height="860" alt="Screenshot 2026-07-23 204350" src="https://github.com/user-attachments/assets/a1e09abb-f50d-4c6f-9bac-97454cc3b328" />
+<img width="1897" height="857" alt="Screenshot 2026-07-23 204431" src="https://github.com/user-attachments/assets/15fe0aca-baaf-4460-aef6-aa1f24df4aba" />
+<img width="1916" height="861" alt="Screenshot 2026-07-23 204525" src="https://github.com/user-attachments/assets/b2f04aae-2f50-4c68-ae8d-24fc20a8c57c" />
+<img width="1917" height="867" alt="Screenshot 2026-07-23 204544" src="https://github.com/user-attachments/assets/d9b51e66-c05d-414a-9ef8-82a98396e276" />
+<img width="1917" height="877" alt="Screenshot 2026-07-23 204555" src="https://github.com/user-attachments/assets/6cf7abc5-4aae-4c14-8f54-4f4ad0deef73" />
+<img width="1892" height="857" alt="Screenshot 2026-07-23 204617" src="https://github.com/user-attachments/assets/7ce9f376-0d9b-4aea-9b3d-02a5e18964b3" />
+
+- **admin**:
+<img width="1905" height="858" alt="Screenshot 2026-07-23 204949" src="https://github.com/user-attachments/assets/ce8b0b79-8f6f-44b6-bf80-a983c31c88c1" />
+<img width="1896" height="862" alt="Screenshot 2026-07-23 205033" src="https://github.com/user-attachments/assets/21110860-5a9d-4cac-a75b-71827704a586" />
+<img width="1897" height="847" alt="Screenshot 2026-07-23 205011" src="https://github.com/user-attachments/assets/0614bea5-4a62-42c2-8eb3-0d851118d489" />
+<img width="1901" height="860" alt="Screenshot 2026-07-23 205000" src="https://github.com/user-attachments/assets/475e42eb-5699-440e-972c-63ea31092f0b" />
+<img width="1917" height="863" alt="Screenshot 2026-07-23 205047" src="https://github.com/user-attachments/assets/9444b9b0-ebf1-428c-b811-7ed71b0bd75f" />
+
+
+
+
+
+
