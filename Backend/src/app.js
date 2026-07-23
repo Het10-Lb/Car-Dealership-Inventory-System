@@ -12,8 +12,11 @@ import ticketRoutes from './routes/ticketRoutes.js';
 
 const app = express();
 
-// Enable CORS
-app.use(cors());
+// Enable CORS with environment variable for production
+app.use(cors({
+  origin: process.env.FRONTEND_URL ,
+  credentials: true,
+}));
 
 // Parse JSON request bodies
 app.use(express.json());
