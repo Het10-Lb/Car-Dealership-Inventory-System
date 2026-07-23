@@ -32,4 +32,14 @@ export const getVehiclesAPI = async () => {
   return response.data;
 };
 
+export const purchaseVehicle = async (id) => {
+  const response = await api.post(`/vehicles/${id}/purchase`);
+  return response.data;
+};
+
+export const getMyPurchases = async () => {
+  const response = await api.get('/purchases/me');
+  return response.data;
+};
+
 export default api;
