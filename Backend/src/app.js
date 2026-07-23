@@ -19,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 // Mount routes
+app.get('/',(req,res) => res.send("API Working for Car Inventory System"))
 app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/purchases', purchaseRoutes);
