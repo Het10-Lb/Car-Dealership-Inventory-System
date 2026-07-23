@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Login from '../Login';
 import { loginAPI } from '../../services/api';
+import { AuthProvider } from '../../context/AuthContext';
 
 // Mock the API and Router
 vi.mock('../../services/api', () => ({
@@ -26,9 +27,11 @@ describe('Login Component', () => {
 
   const renderLogin = () => {
     render(
-      <BrowserRouter>
-        <Login />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Login />
+        </BrowserRouter>
+      </AuthProvider>
     );
   };
 

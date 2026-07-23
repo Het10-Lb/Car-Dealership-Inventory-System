@@ -1,9 +1,6 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
-/* Import fonts from Google Fonts based on the provided reference HTML */
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block');
-
 /* Base styling */
 @layer base {
   body {

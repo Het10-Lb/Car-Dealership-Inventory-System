@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Register from '../Register';
 import { registerAPI } from '../../services/api';
+import { AuthProvider } from '../../context/AuthContext';
 
 // Mock the API and Router
 vi.mock('../../services/api', () => ({
@@ -26,9 +27,11 @@ describe('Register Component', () => {
 
   const renderRegister = () => {
     render(
-      <BrowserRouter>
-        <Register />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Register />
+        </BrowserRouter>
+      </AuthProvider>
     );
   };
 
