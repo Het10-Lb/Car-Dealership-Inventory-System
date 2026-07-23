@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import supertest from 'supertest';
 import app from '../../src/app.js';
 import User from '../../src/models/userModel.js';
+import jwt from 'jsonwebtoken';
 
 let mongoServer;
 let request;
@@ -40,8 +41,7 @@ describe('POST /api/auth/register', () => {
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
     expect(res.body).toHaveProperty('token');
-    expect(res.body.data).toHaveProperty('token');
-    expect(res.body.data.token.split('.')).toHaveLength(3);
+    expect(res.body.token.split('.')).toHaveLength(3);
     expect(res.body.data).toHaveProperty('email', validUser.email);
     expect(res.body.data).toHaveProperty('name', validUser.name);
     expect(res.body.data).toHaveProperty('role', 'customer');
@@ -176,5 +176,103 @@ describe('POST /api/auth/login', () => {
 
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);
+  });
+});
+
+// ─── SETTINGS / PROFILE ──────────────────────────────────────────────────────
+
+describe('PUT /api/auth/profile', () => {
+  let token;
+  let user;
+
+  beforeEach(async () => {
+    user = await User.create({
+      name: 'Profile User',
+      email: `profile_${Date.now()}@example.com`,
+      password: 'Password123',
+    });
+    token = jwt.sign({ id: user._id, role: 'customer' }, process.env.JWT_SECRET || 'dev-secret-key', { expiresIn: '1h' });
+  });
+
+  it('should update user profile successfully', async () => {
+    const res = await request
+      .put('/api/auth/profile')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: 'Updated Name' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.name).toBe('Updated Name');
+  });
+
+  it('should return 404 if user not found during profile update', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const fakeToken = jwt.sign({ id: fakeId, role: 'customer' }, process.env.JWT_SECRET || 'dev-secret-key', { expiresIn: '1h' });
+    
+    const res = await request
+      .put('/api/auth/profile')
+      .set('Authorization', `Bearer ${fakeToken}`)
+      .send({ name: 'Fake' });
+
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe('User not found');
+  });
+});
+
+describe('PUT /api/auth/password', () => {
+  let token;
+  let user;
+
+  beforeEach(async () => {
+    // Need to use bcrypt or let the pre-save hook hash it if it exists.
+    // The userModel probably has a pre('save') hook for hashing passwords.
+    user = await User.create({
+      name: 'Pass User',
+      email: `pass_${Date.now()}@example.com`,
+      password: 'Password123',
+    });
+    token = jwt.sign({ id: user._id, role: 'customer' }, process.env.JWT_SECRET || 'dev-secret-key', { expiresIn: '1h' });
+  });
+
+  it('should update password successfully', async () => {
+    const res = await request
+      .put('/api/auth/password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ currentPassword: 'Password123', newPassword: 'NewPassword123' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+  });
+
+  it('should return 400 if passwords are missing', async () => {
+    const res = await request
+      .put('/api/auth/password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ currentPassword: 'Password123' }); // missing new
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toBe('Current and new passwords are required');
+  });
+
+  it('should return 401 if current password is wrong', async () => {
+    const res = await request
+      .put('/api/auth/password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ currentPassword: 'WrongPassword', newPassword: 'NewPassword123' });
+
+    expect(res.status).toBe(401);
+    expect(res.body.message).toBe('Invalid current password');
+  });
+
+  it('should return 404 if user not found during password update', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const fakeToken = jwt.sign({ id: fakeId, role: 'customer' }, process.env.JWT_SECRET || 'dev-secret-key', { expiresIn: '1h' });
+    
+    const res = await request
+      .put('/api/auth/password')
+      .set('Authorization', `Bearer ${fakeToken}`)
+      .send({ currentPassword: 'Password123', newPassword: 'NewPassword123' });
+
+    expect(res.status).toBe(404);
   });
 });

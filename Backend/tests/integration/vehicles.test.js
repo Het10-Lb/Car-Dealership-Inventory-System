@@ -305,3 +305,30 @@ describe('DELETE /api/vehicles/:id', () => {
     expect(res.body.success).toBe(false);
   });
 });
+
+// ─── POST /api/vehicles/:id/restock ──────────────────────────────────────────
+
+describe('POST /api/vehicles/:id/restock', () => {
+  it('should return 400 when passing invalid quantity', async () => {
+    const vehicle = await seedVehicle();
+
+    const res = await request
+      .post(`/api/vehicles/${vehicle._id}/restock`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ quantity: -5 }); // negative quantity
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+  });
+
+  it('should return 404 for non-existent vehicle ID during restock', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request
+      .post(`/api/vehicles/${fakeId}/restock`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ quantity: 5 });
+
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+});
