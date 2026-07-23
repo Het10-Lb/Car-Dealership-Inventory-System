@@ -8,6 +8,7 @@ import vehicleRoutes from './routes/vehicleRoutes.js';
 
 import purchaseRoutes from './routes/purchaseRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import ticketRoutes from './routes/ticketRoutes.js';
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 export default app;

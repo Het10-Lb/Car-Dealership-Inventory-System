@@ -77,14 +77,20 @@ export default function DashboardLayout({ children }) {
 
         <div className="px-6 mt-auto space-y-1">
           <p className="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest mb-4 opacity-40">Support</p>
-          <button className="w-full flex items-center gap-3 py-3 text-on-surface-variant hover:text-on-surface transition-colors">
+          <Link 
+            to="/settings"
+            className={`w-full flex items-center gap-3 py-3 transition-colors ${isLinkActive('/settings') ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'}`}
+          >
             <Settings size={24} />
             <span className="font-label-md text-label-md">Settings</span>
-          </button>
-          <button className="w-full flex items-center gap-3 py-3 text-on-surface-variant hover:text-on-surface transition-colors">
+          </Link>
+          <Link 
+            to="/support"
+            className={`w-full flex items-center gap-3 py-3 transition-colors ${isLinkActive('/support') ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'}`}
+          >
             <Headset size={24} />
             <span className="font-label-md text-label-md">Support & Ticket</span>
-          </button>
+          </Link>
           <button onClick={logout} className="w-full flex items-center gap-3 py-3 text-error transition-colors mt-4">
             <LogOut size={24} />
             <span className="font-label-md text-label-md">Logout</span>
@@ -111,14 +117,23 @@ export default function DashboardLayout({ children }) {
           </div>
           
           <div className="flex items-center gap-6">
-            <button className="hover:bg-surface-container-high rounded-full p-2 transition-all text-on-surface-variant">
+            <button 
+              onClick={() => navigate('/notifications')}
+              className="hover:bg-surface-container-high rounded-full p-2 transition-all text-on-surface-variant"
+            >
               <Bell size={24} />
             </button>
-            <button className="hover:bg-surface-container-high rounded-full p-2 transition-all text-on-surface-variant">
+            <button 
+              onClick={() => navigate('/support', { state: { tab: 'tickets' } })}
+              className="hover:bg-surface-container-high rounded-full p-2 transition-all text-on-surface-variant"
+            >
               <MessageSquare size={24} />
             </button>
             <div className="h-8 w-[1px] bg-outline-variant"></div>
-            <div className="flex items-center gap-3">
+            <div 
+              onClick={() => navigate('/settings')}
+              className="flex items-center gap-3 cursor-pointer hover:bg-surface-container-high p-2 rounded-xl transition-all"
+            >
               <div className="text-right">
                 <p className="font-label-md text-label-md font-bold text-on-surface">{user?.name || 'User'}</p>
                 <p className="text-[10px] text-on-surface-variant opacity-60">{user?.email}</p>

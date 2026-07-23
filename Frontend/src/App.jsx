@@ -6,6 +6,9 @@ import Register from './pages/Register'
 import Home from './pages/Home'
 import PurchaseHistory from './pages/PurchaseHistory'
 import AdminDashboard from './pages/AdminDashboard'
+import Settings from './pages/Settings'
+import Support from './pages/Support'
+import Notifications from './pages/Notifications'
 import './App.css'
 
 function App() {
@@ -19,6 +22,9 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<Home />} />
           <Route path="/purchase-history" element={<PurchaseHistory />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Route>
 
         {/* Protected Admin Routes */}

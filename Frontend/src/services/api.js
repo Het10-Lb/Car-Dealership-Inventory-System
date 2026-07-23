@@ -81,4 +81,36 @@ export const uploadImage = async (file) => {
   return response.data;
 };
 
+// Settings endpoints
+export const updateProfileAPI = async (data) => {
+  const response = await api.put('/auth/profile', data);
+  return response.data;
+};
+
+export const updatePasswordAPI = async (data) => {
+  const response = await api.put('/auth/password', data);
+  return response.data;
+};
+
+// Ticket endpoints
+export const createTicketAPI = async (data) => {
+  const response = await api.post('/tickets', data);
+  return response.data;
+};
+
+export const getMyTicketsAPI = async () => {
+  const response = await api.get('/tickets/my-tickets');
+  return response.data;
+};
+
+export const getAllTicketsAPI = async () => {
+  const response = await api.get('/tickets');
+  return response.data;
+};
+
+export const resolveTicketAPI = async (id, adminResponse) => {
+  const response = await api.put(`/tickets/${id}/resolve`, { adminResponse });
+  return response.data;
+};
+
 export default api;
