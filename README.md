@@ -6,9 +6,11 @@ A full-stack web application designed for a car dealership to manage its vehicle
 ##Deployment
 Live:  https://car-dealership-inventory-system-five.vercel.app/
 
+*Note: The backend is hosted on Render's free tier, which automatically spins down the server after a period of inactivity. As a result, the first request may take 30–35 seconds while the server instance starts up ("cold start"). Subsequent requests will respond normally once the service is awake.*
+
 Credential for testing:
-- **admin: admin@elitedrive.com  pass: admin
-- **User: test@gmail.com pass: test1234
+- **admin**: admin@elitedrive.com  pass: admin
+- **User**: test@gmail.com pass: test1234
 
 ## Features
 - **Authentication & Authorization**: Secure JWT-based auth with separate roles (Customer, Admin).
